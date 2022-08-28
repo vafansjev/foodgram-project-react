@@ -37,7 +37,8 @@ class Tag(models.Model):
 
     class Meta:
         ordering = ['slug']
-        verbose_name = 'Тэг'
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     def __str__(self):
         return self.name
@@ -60,6 +61,7 @@ class Ingredient(models.Model):
     class Meta:
         ordering = ['name']
         verbose_name = 'Ингридиент'
+        verbose_name_plural = 'Ингридиенты'
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
@@ -102,6 +104,7 @@ class Recipe(models.Model):
 
     class Meta:
         verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
         ordering = ['-pub_date']
 
     def __str__(self):
@@ -167,6 +170,7 @@ class Favorite(models.Model):
 
     class Meta:
         verbose_name = 'Избранный рецепт'
+        verbose_name_plural = 'Избранные рецепты'
         constraints = (
             models.UniqueConstraint(
                 fields=['recipe', 'user'],

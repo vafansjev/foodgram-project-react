@@ -36,6 +36,7 @@ class User(AbstractUser):
 
     class Meta:
         verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
         ordering = ['-id']
         constraints = (
             UniqueConstraint(
@@ -67,6 +68,7 @@ class Subscription(models.Model):
 
     class Meta:
         verbose_name = 'Подписка на автора',
+        verbose_name_plural = 'Подписки'
         constraints = (
             UniqueConstraint(
                 fields=('user', 'author'),
