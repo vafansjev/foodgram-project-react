@@ -48,6 +48,10 @@ class UserCreateSerializer(UserCreateSerializer):
             raise serializers.ValidationError(
                 'Username должен быть длиннее 3х символов'
             )
+        if (not username.isalnum()) or username.isnumeric():
+            raise serializers.ValidationError(
+                'Username должен состоять только из букв и цифр'
+            )
         return username
 
 

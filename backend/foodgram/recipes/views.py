@@ -21,7 +21,13 @@ from .serializers import (
     TagSerializer,
     IngredientSerializer,
     RecipeSerializer,
+    RecipeViewSerializer,
     FavoriteSerializer)
+
+
+GET_METHOD = 'GET'
+POST_METHOD = 'POST'
+DELETE_METHOD = 'DELETE'
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -41,13 +47,44 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
+    serializer_class = RecipeViewSerializer
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_class = RecipeFilter
 
+    def get_serializer_class(self):
+        if self.request.method == GET_METHOD:
+            return RecipeViewSerializer
+        return RecipeSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        return serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        serializer = RecipeViewSerializer(
+            instance=serializer.instance,
+            context={'request': self.request},
+        )
+        return Response(
+            serializer.data, status=status.HTTP_200_OK
+        )
+
     @action(
-        methods=['POST', 'DELETE'],
+        methods=[POST_METHOD, DELETE_METHOD],
         detail=True,
         url_path='favorite',
         permission_classes=[IsAuthenticated],
@@ -55,7 +92,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def favorite(self, request, pk=id):
         user = request.user
-        if request.method == 'POST':
+        if request.method == POST_METHOD:
             recipe = get_object_or_404(Recipe, pk=pk)
             favorite = Favorite.objects.create(user=user, recipe=recipe)
             serializer = FavoriteSerializer(favorite)
@@ -66,7 +103,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=['POST', 'DELETE'],
+        methods=[POST_METHOD, DELETE_METHOD],
         detail=True,
         url_path='shopping_cart',
         permission_classes=[IsAuthenticated],
@@ -74,7 +111,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk=id):
         user = request.user
-        if request.method == 'POST':
+        if request.method == POST_METHOD:
             recipe = get_object_or_404(Recipe, pk=pk)
             favorite = ShoppingCart.objects.create(user=user, recipe=recipe)
             serializer = FavoriteSerializer(favorite)
@@ -85,7 +122,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=['GET'],
+        methods=[GET_METHOD],
         detail=False,
         url_path='download_shopping_cart',
         permission_classes=[IsAuthenticated]
