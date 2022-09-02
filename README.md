@@ -1,3 +1,5 @@
+![foodgram workflow](https://github.com/vafansjev/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+
 ___
 ## Описание:
 Проект Foodgram (Продуктовый помощник) - онлайн сервис, которой позволяет создавать базу рецептов, подписываться на других авторов и распечатывать список ингридиентов для покупки своих любимых рецептов.
