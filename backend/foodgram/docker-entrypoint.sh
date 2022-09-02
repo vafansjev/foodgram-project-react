@@ -1,3 +1,4 @@
+#!/bin/sh
 echo "Apply database migrations"
 python3 manage.py migrate --noinput
 echo "Collect static files"
