@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-
 from users.models import Subscription
 from users.serializers import CustomUserSerializer
 
@@ -34,7 +33,7 @@ class IngredientsInRecipeSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
-        )
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -221,5 +220,4 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(
-                author=obj.author
-            ).count()
+                author=obj.author).count()

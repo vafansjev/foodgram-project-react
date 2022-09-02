@@ -114,8 +114,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=[GET_METHOD],
+        url_path='download_shopping_cart',
         permission_classes=[IsAuthenticated]
-        )
+    )
     def download_shopping_cart(self, request):
         cart = RecipeIngredient.objects.filter(
             recipe__shopping_cart__user=request.user).values_list(

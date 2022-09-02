@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 from recipes.pagination import CustomPagesPaginator
 from recipes.serializers import SubscribeSerializer
 
@@ -67,11 +66,11 @@ class CustomUserViewSet(DjoserViewSet):
             subscription = Subscription.objects.create(
                 user=user,
                 author=author
-                )
+            )
             serializer = SubscribeSerializer(
                 subscription,
                 context={'request': request}
-                )
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == DELETE_METHOD:
             if user == author:
@@ -81,7 +80,7 @@ class CustomUserViewSet(DjoserViewSet):
                 )
             subscription = Subscription.objects.filter(
                 user=user, author=author
-                )
+            )
             if subscription.exists():
                 subscription.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
