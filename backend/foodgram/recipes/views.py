@@ -1,29 +1,19 @@
+from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .filters import IngredientSearchFilter, RecipeFilter
-from .permissions import IsAuthorOrAdminOrReadOnly
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 from .pagination import PageNumberPagination
-
-from .models import (
-    ShoppingCart,
-    Tag,
-    Ingredient,
-    Recipe,
-    Favorite,
-    RecipeIngredient)
-from .serializers import (
-    TagSerializer,
-    IngredientSerializer,
-    RecipeSerializer,
-    RecipeViewSerializer,
-    FavoriteSerializer)
-
+from .permissions import IsAuthorOrAdminOrReadOnly
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          RecipeSerializer, RecipeViewSerializer,
+                          TagSerializer)
 
 GET_METHOD = 'GET'
 POST_METHOD = 'POST'

@@ -1,14 +1,14 @@
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from recipes.pagination import CustomPagesPaginator
-from .models import Subscription, User
 from recipes.serializers import SubscribeSerializer
 
+from .models import Subscription, User
 
 GET_METHOD = 'GET'
 POST_METHOD = 'POST'
