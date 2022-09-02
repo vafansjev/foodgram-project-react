@@ -1,6 +1,6 @@
-from django.http import HttpResponse
-from django.db.models import Sum
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -122,25 +122,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=[GET_METHOD],
         detail=False,
-        url_path='download_shopping_cart',
+        methods=[GET_METHOD],
         permission_classes=[IsAuthenticated]
-    )
+        )
     def download_shopping_cart(self, request):
         cart = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=request.user).values(
-                'ingredient__name', 'ingredient__measurement_unit').annotate(
-                    amount=Sum('amount')
-                )
+            recipe__shopping_cart__user=request.user).values_list(
+            'ingredient__name', 'ingredient__measurement_unit').order_by(
+                'ingredient__name').annotate(ingredient_total=Sum('amount'))
         text = 'Купить ингридиенты (продукты): \n'
-        for ingredient in cart:
-            name = ingredient['ingredient__name']
-            amount = ingredient['amount']
-            measure = ingredient['ingredient__measurement_unit']
-
-            text += (f'{name}: {amount}, {measure}\n')
-
+        for ingredients in cart:
+            name, measurement_unit, amount = ingredients
+            text += f'{name}: {amount} {measurement_unit}\n'
         response = HttpResponse(text, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename="shoplist.txt"'
+        response['Content-Disposition'] = (
+            'attachment; filename="shopping-list.txt"'
+        )
         return response

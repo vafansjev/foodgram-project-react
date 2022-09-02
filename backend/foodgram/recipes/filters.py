@@ -17,7 +17,7 @@ class RecipeFilter(filter.FilterSet):
         method='filter_tags'
     )
     is_favorited = filter.CharFilter(
-        method='get_is_favourited'
+        method='get_is_favorited'
     )
     is_in_shopping_cart = filter.CharFilter(
         method='get_is_in_shopping_cart'
@@ -26,6 +26,10 @@ class RecipeFilter(filter.FilterSet):
     class Meta:
         model = Recipe
         fields = ('is_favorited', 'is_in_shopping_cart', 'author', 'tags')
+
+    def filter_tags(self, queryset, slug, tags):
+        tags = self.request.query_params.getlist('tags')
+        return queryset.filter(tags__slug__in=tags).distinct()
 
     def get_is_favorited(self, queryset, name, value):
         if self.request.user.is_authenticated and value:

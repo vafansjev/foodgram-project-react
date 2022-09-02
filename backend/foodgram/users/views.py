@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -7,10 +7,15 @@ from rest_framework.response import Response
 
 from recipes.pagination import CustomPagesPaginator
 from .models import Subscription, User
-from .serializers import SubscribeSerializer
+from recipes.serializers import SubscribeSerializer
 
 
-class CustomUserViewSet(UserViewSet):
+GET_METHOD = 'GET'
+POST_METHOD = 'POST'
+DELETE_METHOD = 'DELETE'
+
+
+class CustomUserViewSet(DjoserViewSet):
     """
     Представление для работы с подписками пользователей
     """
@@ -18,7 +23,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(
         detail=False,
-        methods=['GET'],
+        methods=[GET_METHOD],
         url_name="me",
         url_path="me",
         permission_classes=(IsAuthenticated,)
@@ -29,7 +34,7 @@ class CustomUserViewSet(UserViewSet):
         return Response(serializer.data)
 
     @action(
-        methods=['GET'],
+        methods=[GET_METHOD],
         detail=False,
         url_path='subscriptions',
         permission_classes=(IsAuthenticated,)
@@ -45,7 +50,7 @@ class CustomUserViewSet(UserViewSet):
         return self.get_paginated_response(serializer.data)
 
     @action(
-        methods=['POST', 'DELETE'],
+        methods=[POST_METHOD, DELETE_METHOD],
         detail=True,
         permission_classes=(IsAuthenticated,),
         url_path='subscribe'
@@ -54,7 +59,7 @@ class CustomUserViewSet(UserViewSet):
         author = get_object_or_404(User, id=id)
         user = request.user
 
-        if request.method == 'POST':
+        if request.method == POST_METHOD:
             if user == author:
                 return Response({
                     'errors': 'Нельзя подписываться на самого себя'
@@ -68,7 +73,7 @@ class CustomUserViewSet(UserViewSet):
                 context={'request': request}
                 )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
+        if request.method == DELETE_METHOD:
             if user == author:
                 return Response({
                     'errors': 'Нельзя подписываться на самого себя'
