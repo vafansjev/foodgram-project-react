@@ -6,8 +6,9 @@ services:
       - /var/lib/postgresql/data/
     env_file:
       - ./.env
+
   backend:
-    image: vafansjev/foodgram_backend:latest
+    image: vafansjev/foodgram_backend
     restart: always
     volumes:
       - static_value:/app/static
@@ -16,10 +17,12 @@ services:
       - db
     env_file:
       - ./.env
+
   frontend:
-    image: vafansjev/foodgram_frontend:latest
+    image: vafansjev/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
+
   nginx:
     image: nginx:1.19.3
     ports:
@@ -32,7 +35,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - backend
+
 volumes:
-  postgres_data:
   static_value:
   media_value:
