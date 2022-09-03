@@ -7,11 +7,12 @@ from .models import Subscription, User
 class UserAdmin(admin.ModelAdmin):
     list_display = [
         'id',
+        'email',
         'username',
         'first_name',
         'last_name'
     ]
-    search_fields = ('email', 'username')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
     list_filter = ('email', 'username')
 
 
