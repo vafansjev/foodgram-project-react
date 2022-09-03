@@ -2,9 +2,12 @@
 
 ___
 ## Данные сервера
-Адрес: https://vafansjev.hopto.org/
+Адрес: http://vafansjev.hopto.org/
+
 ip-адрес: 51.250.64.244
+
 Имя администратора: sa@sa.sa
+
 Пароль администратора: QQQwwwAAAsss123
 
 ___
