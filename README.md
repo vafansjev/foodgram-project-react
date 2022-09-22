@@ -1,16 +1,6 @@
 ![foodgram workflow](https://github.com/vafansjev/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 ___
-## Данные сервера
-Адрес: http://vafansjev.hopto.org/
-
-ip-адрес: 51.250.64.244
-
-Имя администратора: sa@sa.sa
-
-Пароль администратора: QQQwwwAAAsss123
-
-___
 ## Описание:
 Проект Foodgram (Продуктовый помощник) - онлайн сервис, которой позволяет создавать базу рецептов, подписываться на других авторов и распечатывать список ингридиентов для покупки своих любимых рецептов.
 ___
